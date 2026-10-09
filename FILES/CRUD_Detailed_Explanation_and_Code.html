@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+<title>CRUD Project Documentation</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;500;600;700&display=swap');
+@page {
+    size: A4;
+    margin: 18mm 16mm 18mm 16mm;
+    @bottom-right {
+        content: counter(page);
+    }
+}
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #1e293b;
+    line-height: 1.6;
+    font-size: 13.5px;
+    background: #fff;
+    padding: 0;
+    margin: 0;
+}
+h1 {
+    color: #0f172a;
+    font-size: 24px;
+    border-bottom: 2px solid #2563eb;
+    padding-bottom: 8px;
+    margin-top: 0;
+}
+h2 {
+    color: #1e3a8a;
+    font-size: 18px;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 6px;
+    margin-top: 24px;
+    page-break-after: avoid;
+}
+h3 {
+    color: #1d4ed8;
+    font-size: 15px;
+    margin-top: 20px;
+    page-break-after: avoid;
+}
+h4 {
+    color: #334155;
+    font-size: 13.5px;
+    margin-top: 14px;
+    page-break-after: avoid;
+}
+pre {
+    background-color: #0f172a;
+    color: #e2e8f0;
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-family: 'Fira Code', 'Consolas', 'Courier New', monospace;
+    font-size: 12px;
+    line-height: 1.45;
+    overflow-x: auto;
+    page-break-inside: avoid;
+    border: 1px solid #334155;
+}
+code {
+    font-family: 'Fira Code', 'Consolas', monospace;
+    background-color: #f1f5f9;
+    color: #0369a1;
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+pre code {
+    background-color: transparent;
+    color: inherit;
+    padding: 0;
+}
+ul, ol {
+    margin-top: 6px;
+    margin-bottom: 12px;
+    padding-left: 24px;
+}
+li {
+    margin-bottom: 6px;
+}
+blockquote {
+    border-left: 4px solid #3b82f6;
+    background-color: #eff6ff;
+    margin: 8px 0;
+    padding: 8px 14px;
+    border-radius: 0 6px 6px 0;
+    color: #1e40af;
+}
+hr {
+    border: none;
+    border-top: 1px solid #cbd5e1;
+    margin: 22px 0;
+}
+strong {
+    color: #0f172a;
+}
+.page-break {
+    page-break-before: always;
+}
+</style>
+
+</head>
+<body>
+<h1>Spring Boot CRUD Application: Comprehensive Line-by-Line &amp; Code Reference</h1>
+<p>This document provides a block-by-block, line-by-line breakdown of all five core source files in the <code>CRUD</code> project. It covers all keywords, annotations, architectural roles, and underlying mechanisms, followed by the complete, full source code of each file.</p>
+<hr />
+<h2>Table of Contents</h2>
+<ol>
+<li><a href="#overview-of-the-5-core-files">Overview of the 5 Core Files</a></li>
+<li><a href="#detailed-line-by-line-breakdown-by-block">Detailed Line-by-Line Breakdown by Block</a></li>
+<li><a href="#1-crudapplicationjava">1. CrudApplication.java</a></li>
+<li><a href="#2-customerjava">2. Customer.java</a></li>
+<li><a href="#3-customerrepojava">3. CustomerRepo.java</a></li>
+<li><a href="#4-welcomejava">4. Welcome.java</a></li>
+<li><a href="#5-crudapplicationtestsjava">5. CrudApplicationTests.java</a></li>
+<li><a href="#full-source-code-of-all-5-files">Full Source Code of All 5 Files</a></li>
+<li><a href="#full-code-crudapplicationjava">Full Code: CrudApplication.java</a></li>
+<li><a href="#full-code-customerjava">Full Code: Customer.java</a></li>
+<li><a href="#full-code-customerrepojava">Full Code: CustomerRepo.java</a></li>
+<li><a href="#full-code-welcomejava">Full Code: Welcome.java</a></li>
+<li><a href="#full-code-crudapplicationtestsjava">Full Code: CrudApplicationTests.java</a></li>
+</ol>
+<hr />
+<h2>Overview of the 5 Core Files</h2>
+<pre><code class="language-mermaid">flowchart TD
+    Client[&quot;Client (Browser / React / Postman)&quot;] --&gt;|HTTP Request| Welcome[&quot;Welcome.java (@RestController)&quot;]
+    Welcome --&gt;|Dependency Injection| CustomerRepo[&quot;CustomerRepo.java (@Repository)&quot;]
+    CustomerRepo --&gt;|CRUD Operations| Customer[&quot;Customer.java (@Entity)&quot;]
+    CustomerRepo --&gt;|Hibernate / JDBC| DB[(&quot;MySQL Database: CRUD_Springworkshop&quot;)]
+    CrudApp[&quot;CrudApplication.java (@SpringBootApplication)&quot;] -.-&gt;|Bootstraps ApplicationContext| Welcome
+    CrudApp -.-&gt;|Bootstraps ApplicationContext| CustomerRepo
+    Tests[&quot;CrudApplicationTests.java (@SpringBootTest)&quot;] -.-&gt;|Integration Verification| CrudApp
+</code></pre>
+<hr />
+<h2>Detailed Line-by-Line Breakdown by Block</h2>
+<hr />
+<h3>1. <code>CrudApplication.java</code></h3>
+<p><em>Role: Application bootstrap and entry-point.</em></p>
+<h4>Block 1: Package &amp; Imports</h4>
+<pre><code class="language-java">package com.ruthvik.CRUD;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+</code></pre>
+<ul>
+<li><strong><code>package com.ruthvik.CRUD;</code></strong></li>
+<li><strong>Terminology</strong>: <code>package</code> keyword.</li>
+<li><strong>Purpose</strong>: Defines the root namespace. In Spring Boot, this acts as the <strong>base package</strong>. All Spring beans, controllers, services, and repositories located in this package or any of its subpackages (<code>com.ruthvik.CRUD.controller</code>, <code>com.ruthvik.CRUD.model</code>, <code>com.ruthvik.CRUD.repository</code>) are automatically scanned and registered.</li>
+<li><strong><code>import org.springframework.boot.SpringApplication;</code></strong></li>
+<li><strong>Terminology</strong>: Class import.</li>
+<li><strong>Purpose</strong>: Brings the <code>SpringApplication</code> bootstrap class into scope. This class provides static helper methods to launch the Spring container from a conventional Java <code>main</code> method.</li>
+<li><strong><code>import org.springframework.boot.autoconfigure.SpringBootApplication;</code></strong></li>
+<li><strong>Terminology</strong>: Annotation import.</li>
+<li><strong>Purpose</strong>: Imports the central <code>@SpringBootApplication</code> annotation which drives configuration and auto-wiring.</li>
+</ul>
+<h4>Block 2: Class Header &amp; Annotations</h4>
+<pre><code class="language-java">@SpringBootApplication
+public class CrudApplication {
+</code></pre>
+<ul>
+<li><strong><code>@SpringBootApplication</code></strong></li>
+<li><strong>Terminology</strong>: Meta-annotation.</li>
+<li><strong>Purpose</strong>: Consolidates three fundamental Spring annotations:<ol>
+<li><code>@Configuration</code>: Marks the class as a configuration source for Spring beans.</li>
+<li><code>@EnableAutoConfiguration</code>: Evaluates dependencies on the classpath (e.g., Spring Web, Spring Data JPA, MySQL Connector, Tomcat) and automatically configures default beans and datasource connections.</li>
+<li><code>@ComponentScan</code>: Activates component scanning starting from <code>com.ruthvik.CRUD</code>.</li>
+</ol>
+</li>
+<li><strong><code>public class CrudApplication {</code></strong></li>
+<li><strong>Terminology</strong>: <code>public</code> access modifier, <code>class</code> definition.</li>
+<li><strong>Purpose</strong>: Declares the primary configuration class that anchors the Spring application lifecycle.</li>
+</ul>
+<h4>Block 3: Main Bootstrap Method</h4>
+<pre><code class="language-java">    public static void main(String[] args) {
+        SpringApplication.run(CrudApplication.class, args);
+    }
+}
+</code></pre>
+<ul>
+<li><strong><code>public static void main(String[] args) {</code></strong></li>
+<li><strong>Terminology</strong>: <ul>
+<li><code>public</code>: Accessible to the JVM from outside the package.</li>
+<li><code>static</code>: Executable directly without instantiating the class.</li>
+<li><code>void</code>: Does not return any value.</li>
+<li><code>String[] args</code>: Captures command-line arguments.</li>
+</ul>
+</li>
+<li><strong>Purpose</strong>: Standard Java entry point.</li>
+<li><strong><code>SpringApplication.run(CrudApplication.class, args);</code></strong></li>
+<li><strong>Terminology</strong>: Static factory method invocation.</li>
+<li><strong>Purpose</strong>:<ol>
+<li>Creates and prepares the <code>ApplicationContext</code> (IoC container).</li>
+<li>Scans for annotated components and binds beans.</li>
+<li>Starts the embedded servlet container (Tomcat on port <code>9991</code>).</li>
+<li>Parses and applies configuration properties from <code>application.properties</code>.</li>
+</ol>
+</li>
+<li><strong><code>}</code></strong>: Closes the <code>main</code> method.</li>
+<li><strong><code>}</code></strong>: Closes the <code>CrudApplication</code> class body.</li>
+</ul>
+<hr />
+<h3>2. <code>Customer.java</code></h3>
+<p><em>Role: JPA Entity mapping Java objects to relational database tables.</em></p>
+<h4>Block 1: Package &amp; Imports</h4>
+<pre><code class="language-java">package com.ruthvik.CRUD.model;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+import lombok.Getter;
+import lombok.Setter;
+</code></pre>
+<ul>
+<li><strong><code>package com.ruthvik.CRUD.model;</code></strong>: Groups the class in the model layer representing the business entity.</li>
+<li><strong><code>import jakarta.persistence.Entity;</code></strong>: Jakarta Persistence API (JPA) annotation for designating database-backed objects.</li>
+<li><strong><code>import jakarta.persistence.GeneratedValue;</code></strong>: Configures automatic primary key generation.</li>
+<li><strong><code>import jakarta.persistence.GenerationType;</code></strong>: Enum providing primary key strategies (<code>IDENTITY</code>, <code>SEQUENCE</code>, <code>AUTO</code>, <code>TABLE</code>).</li>
+<li><strong><code>import jakarta.persistence.Id;</code></strong>: Declares a field as the primary key.</li>
+<li><strong><code>import jakarta.persistence.Table;</code></strong>: Configures the relational table name and options.</li>
+<li><strong><code>import lombok.Getter;</code></strong>: Project Lombok annotation to generate getter methods at compile time.</li>
+<li><strong><code>import lombok.Setter;</code></strong>: Project Lombok annotation to generate setter methods at compile time.</li>
+</ul>
+<h4>Block 2: Entity &amp; Table Mapping with Lombok</h4>
+<pre><code class="language-java">@Entity
+@Table(name = &quot;CRUD_Springworkshop&quot;)
+@Getter
+@Setter
+public class Customer {
+</code></pre>
+<ul>
+<li><strong><code>@Entity</code></strong></li>
+<li><strong>Terminology</strong>: JPA ORM annotation.</li>
+<li><strong>Purpose</strong>: Tells Hibernate to manage this class as a database entity, mapping instances of <code>Customer</code> to database rows.</li>
+<li><strong><code>@Table(name = "CRUD_Springworkshop")</code></strong></li>
+<li><strong>Terminology</strong>: Table mapping annotation.</li>
+<li><strong>Purpose</strong>: Explicitly maps this entity to a MySQL table named <code>CRUD_Springworkshop</code>. Without this, Hibernate would default to the lowercase class name <code>customer</code>.</li>
+<li><strong><code>@Getter</code></strong></li>
+<li><strong>Terminology</strong>: Lombok compile-time processor annotation.</li>
+<li><strong>Purpose</strong>: Generates standard public getter methods (<code>getCid()</code>, <code>getCname()</code>, <code>getProductName()</code>, <code>getPrice()</code>, <code>getQuantity()</code>) during compilation to avoid boilerplate code.</li>
+<li><strong><code>@Setter</code></strong></li>
+<li><strong>Terminology</strong>: Lombok compile-time processor annotation.</li>
+<li><strong>Purpose</strong>: Generates standard public setter methods (<code>setCid(...)</code>, <code>setCname(...)</code>, etc.) during compilation.</li>
+<li><strong><code>public class Customer {</code></strong></li>
+<li><strong>Purpose</strong>: Declares the public entity class representing a customer.</li>
+</ul>
+<h4>Block 3: Primary Key Specification</h4>
+<pre><code class="language-java">    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Integer cid;
+</code></pre>
+<ul>
+<li><strong><code>@Id</code></strong></li>
+<li><strong>Terminology</strong>: Primary Key marker.</li>
+<li><strong>Purpose</strong>: Identifies <code>cid</code> as the entity's primary key (unique record identifier).</li>
+<li><strong><code>@GeneratedValue(strategy = GenerationType.IDENTITY)</code></strong></li>
+<li><strong>Terminology</strong>: Generation strategy attribute.</li>
+<li><strong>Purpose</strong>: Delegates primary key generation to the underlying database using MySQL's native <code>AUTO_INCREMENT</code> feature.</li>
+<li><strong><code>Integer cid;</code></strong></li>
+<li><strong>Terminology</strong>: Wrapper type field.</li>
+<li><strong>Purpose</strong>: Holds the customer identifier. The wrapper <code>Integer</code> is used instead of primitive <code>int</code> so that before a record is saved to the database, its ID can be <code>null</code>. A primitive <code>int</code> would default to <code>0</code>, which can cause Hibernate to incorrectly assume the entity is already persisted.</li>
+</ul>
+<h4>Block 4: Entity Properties / Columns</h4>
+<pre><code class="language-java">    String cname;
+    String productName;
+    Double price;
+    Integer quantity;
+}
+</code></pre>
+<ul>
+<li><strong><code>String cname;</code></strong>: Customer name, mapped to column <code>cname</code> (<code>VARCHAR(255)</code>).</li>
+<li><strong><code>String productName;</code></strong>: Purchased product name, mapped to column <code>product_name</code> / <code>productname</code>.</li>
+<li><strong><code>Double price;</code></strong>: Price of the item, mapped to a <code>DOUBLE</code> column; allows fractional decimal amounts and <code>null</code> values.</li>
+<li><strong><code>Integer quantity;</code></strong>: Quantity of items purchased, mapped to an integer column.</li>
+<li><strong><code>}</code></strong>: Closes the <code>Customer</code> class body.</li>
+</ul>
+<hr />
+<h3>3. <code>CustomerRepo.java</code></h3>
+<p><em>Role: Data Access Layer interface leveraging Spring Data JPA.</em></p>
+<h4>Block 1: Package &amp; Imports</h4>
+<pre><code class="language-java">package com.ruthvik.CRUD.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.ruthvik.CRUD.model.Customer;
+</code></pre>
+<ul>
+<li><strong><code>package com.ruthvik.CRUD.repository;</code></strong>: Designates this interface as part of the repository/data access layer.</li>
+<li><strong><code>import org.springframework.data.jpa.repository.JpaRepository;</code></strong>: Imports Spring Data's primary abstraction for CRUD operations, pagination, and sorting.</li>
+<li><strong><code>import org.springframework.stereotype.Repository;</code></strong>: Imports the stereotype annotation for data access components.</li>
+<li><strong><code>import com.ruthvik.CRUD.model.Customer;</code></strong>: Imports the entity managed by this repository.</li>
+</ul>
+<h4>Block 2: Interface Declaration &amp; Generic Inheritance</h4>
+<pre><code class="language-java">@Repository
+public interface CustomerRepo extends JpaRepository&lt;Customer, Integer&gt; {
+
+}
+</code></pre>
+<ul>
+<li><strong><code>@Repository</code></strong></li>
+<li><strong>Terminology</strong>: Spring stereotype annotation.</li>
+<li><strong>Purpose</strong>: Marks the interface as a Spring-managed Data Access Object (DAO). Enables component scanning and translates native database/JDBC exceptions into Spring's unchecked <code>DataAccessException</code>.</li>
+<li><strong><code>public interface CustomerRepo extends JpaRepository&lt;Customer, Integer&gt; {</code></strong></li>
+<li><strong>Terminology</strong>:<ul>
+<li><code>public interface</code>: Declares a Java interface contract. No manual implementation class (<code>CustomerRepoImpl</code>) is required.</li>
+<li><code>extends JpaRepository&lt;Customer, Integer&gt;</code>: Inherits full CRUD functionality:</li>
+<li><code>Customer</code>: The entity type being managed.</li>
+<li><code>Integer</code>: The data type of the entity's primary key (<code>@Id Integer cid</code>).</li>
+</ul>
+</li>
+<li><strong>Internal Mechanism</strong>: At application startup, Spring Data JPA generates a dynamic proxy implementation in memory that provides ready-to-use methods: <code>save()</code>, <code>saveAll()</code>, <code>findById()</code>, <code>findAll()</code>, <code>deleteById()</code>, <code>count()</code>, and <code>existsById()</code>.</li>
+<li><strong><code>}</code></strong>: Closes the <code>CustomerRepo</code> interface body.</li>
+</ul>
+<hr />
+<h3>4. <code>Welcome.java</code></h3>
+<p><em>Role: REST Controller handling HTTP requests and routing responses.</em></p>
+<h4>Block 1: Package &amp; Imports</h4>
+<pre><code class="language-java">package com.ruthvik.CRUD.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ruthvik.CRUD.model.Customer;
+import com.ruthvik.CRUD.repository.CustomerRepo;
+</code></pre>
+<ul>
+<li><strong><code>package com.ruthvik.CRUD.controller;</code></strong>: Locates this class in the web controller layer.</li>
+<li><strong><code>import java.util.List;</code></strong>: Standard Java collection interface for returning multiple items.</li>
+<li><strong><code>import org.springframework.beans.factory.annotation.Autowired;</code></strong>: Spring dependency injection annotation.</li>
+<li><strong><code>import org.springframework.web.bind.annotation.CrossOrigin;</code></strong>: Annotation configuring Cross-Origin Resource Sharing (CORS).</li>
+<li><strong><code>import org.springframework.web.bind.annotation.DeleteMapping;</code></strong>: Maps HTTP DELETE requests.</li>
+<li><strong><code>import org.springframework.web.bind.annotation.GetMapping;</code></strong>: Maps HTTP GET requests.</li>
+<li><strong><code>import org.springframework.web.bind.annotation.PathVariable;</code></strong>: Extracts variables from URI path templates.</li>
+<li><strong><code>import org.springframework.web.bind.annotation.PostMapping;</code></strong>: Maps HTTP POST requests.</li>
+<li><strong><code>import org.springframework.web.bind.annotation.PutMapping;</code></strong>: Maps HTTP PUT requests.</li>
+<li><strong><code>import org.springframework.web.bind.annotation.RequestBody;</code></strong>: Deserializes JSON payloads into Java objects.</li>
+<li><strong><code>import org.springframework.web.bind.annotation.RestController;</code></strong>: Convenience annotation combining <code>@Controller</code> and <code>@ResponseBody</code>.</li>
+<li><strong><code>import com.ruthvik.CRUD.model.Customer;</code></strong>: Model entity import.</li>
+<li><strong><code>import com.ruthvik.CRUD.repository.CustomerRepo;</code></strong>: Repository interface import.</li>
+</ul>
+<h4>Block 2: Controller Header &amp; Injected Dependency</h4>
+<pre><code class="language-java">@RestController
+@CrossOrigin(origins = &quot;http://localhost:5173&quot;)
+public class Welcome {
+
+    @Autowired
+    CustomerRepo customerRepo;
+</code></pre>
+<ul>
+<li><strong><code>@RestController</code></strong></li>
+<li><strong>Terminology</strong>: Specialized Spring Controller annotation.</li>
+<li><strong>Purpose</strong>: Marks the class as a RESTful request handler. It implicitly applies <code>@ResponseBody</code> to all handler methods, ensuring that Java objects are serialized directly into JSON format (via Jackson) and written into the HTTP response stream.</li>
+<li><strong><code>@CrossOrigin(origins = "http://localhost:5173")</code></strong></li>
+<li><strong>Terminology</strong>: CORS policy annotation.</li>
+<li><strong>Purpose</strong>: Grants cross-origin request permissions to requests originating from <code>http://localhost:5173</code> (e.g. Vite / React dev server). Prevents browser <code>Access-Control-Allow-Origin</code> errors.</li>
+<li><strong><code>public class Welcome {</code></strong></li>
+<li><strong>Purpose</strong>: Declares the REST controller class.</li>
+<li><strong><code>@Autowired</code></strong></li>
+<li><strong>Terminology</strong>: Dependency injection annotation.</li>
+<li><strong>Purpose</strong>: Instructs Spring's IoC container to find the proxy bean created for <code>CustomerRepo</code> and inject it into this field.</li>
+<li><strong><code>CustomerRepo customerRepo;</code></strong></li>
+<li><strong>Purpose</strong>: Holds the injected repository bean used across endpoint methods for database interactions.</li>
+</ul>
+<h4>Block 3: Commented-Out Welcome Test Endpoint</h4>
+<pre><code class="language-java">    // http://localhost:9991/hello
+    // @GetMapping(&quot;/hello&quot;)
+    // String hello() {
+    // return &quot;hello Welcome to SPRING WORKSHOP&quot;;
+    // }
+</code></pre>
+<ul>
+<li><strong>Purpose</strong>: Early sanity-check endpoint used during initial setup to test if the embedded Tomcat server was running properly. Commented out once CRUD capabilities were added.</li>
+</ul>
+<h4>Block 4: Read All Customers Endpoint (<code>GET /getCustList</code>)</h4>
+<pre><code class="language-java">    // http://localhost:9991/getCustList - GET ALL CUSTOMERS
+    @GetMapping(&quot;/getCustList&quot;)
+    List&lt;Customer&gt; getAllCustomerDetails() {
+        return customerRepo.findAll();
+    }
+</code></pre>
+<ul>
+<li><strong><code>// http://localhost:9991/getCustList - GET ALL CUSTOMERS</code></strong>: Descriptive developer comment.</li>
+<li><strong><code>@GetMapping("/getCustList")</code></strong></li>
+<li><strong>Terminology</strong>: HTTP GET method route mapping.</li>
+<li><strong>Purpose</strong>: Maps incoming <code>GET</code> requests sent to <code>/getCustList</code> to this method.</li>
+<li><strong><code>List&lt;Customer&gt; getAllCustomerDetails() {</code></strong></li>
+<li><strong>Terminology</strong>: Method returning a <code>List</code> collection.</li>
+<li><strong>Purpose</strong>: Spring converts the returned <code>List&lt;Customer&gt;</code> into a JSON array (<code>[{...}, {...}]</code>) in the HTTP response.</li>
+<li><strong><code>return customerRepo.findAll();</code></strong></li>
+<li><strong>Terminology</strong>: Repository query invocation.</li>
+<li><strong>Purpose</strong>: Calls <code>customerRepo.findAll()</code> which executes <code>SELECT * FROM CRUD_Springworkshop</code> in MySQL and returns all customer records.</li>
+<li><strong><code>}</code></strong>: Closes the <code>getAllCustomerDetails</code> method.</li>
+</ul>
+<h4>Block 5: Read Single Customer by ID Endpoint (<code>GET /getCust/{cid}</code>)</h4>
+<pre><code class="language-java">    // http://localhost:9991/getCust/1 - GET CUSTOMER BY ID
+    @GetMapping(&quot;/getCust/{cid}&quot;)
+    Customer getCustomer(@PathVariable Integer cid) {
+        return customerRepo.findById(cid).orElseThrow();
+    }
+</code></pre>
+<ul>
+<li><strong><code>// http://localhost:9991/getCust/1 - GET CUSTOMER BY ID</code></strong>: Comment illustrating the URI format.</li>
+<li><strong><code>@GetMapping("/getCust/{cid}")</code></strong></li>
+<li><strong>Terminology</strong>: URI path variable template.</li>
+<li><strong>Purpose</strong>: The <code>{cid}</code> portion acts as a dynamic placeholder for the customer ID.</li>
+<li><strong><code>Customer getCustomer(@PathVariable Integer cid) {</code></strong></li>
+<li><strong>Terminology</strong>: <code>@PathVariable</code> binding.</li>
+<li><strong>Purpose</strong>: Binds the value from <code>{cid}</code> in the URL directly to the method argument <code>Integer cid</code>.</li>
+<li><strong><code>return customerRepo.findById(cid).orElseThrow();</code></strong></li>
+<li><strong>Terminology</strong>:<ul>
+<li><code>findById(cid)</code>: Queries database with <code>SELECT * FROM CRUD_Springworkshop WHERE cid = ?</code> and returns an <code>Optional&lt;Customer&gt;</code>.</li>
+<li><code>.orElseThrow()</code>: Unwraps the <code>Optional</code>. If found, returns the <code>Customer</code>. If not found, throws <code>NoSuchElementException</code>.</li>
+</ul>
+</li>
+<li><strong><code>}</code></strong>: Closes the <code>getCustomer</code> method.</li>
+</ul>
+<h4>Block 6: Create Customer Endpoint (<code>POST /createCust</code>) &amp; Bulk Option</h4>
+<pre><code class="language-java">    // http://localhost:9991/createCust - CREATE CUSTOMER
+    @PostMapping(&quot;/createCust&quot;)
+    public Customer createCustomer(@RequestBody Customer customer) {
+        return customerRepo.save(customer);
+    }
+
+    // Create multiple customers at once
+//  @PostMapping(&quot;/createCust&quot;)
+//  public List&lt;Customer&gt; createCustomers(@RequestBody List&lt;Customer&gt; customers) {
+//      return customerRepo.saveAll(customers);
+//  }
+</code></pre>
+<ul>
+<li><strong><code>// http://localhost:9991/createCust - CREATE CUSTOMER</code></strong>: Comment documentation.</li>
+<li><strong><code>@PostMapping("/createCust")</code></strong></li>
+<li><strong>Terminology</strong>: HTTP POST method route mapping.</li>
+<li><strong>Purpose</strong>: Directs HTTP <code>POST</code> requests to <code>/createCust</code> to this method for inserting new records.</li>
+<li><strong><code>public Customer createCustomer(@RequestBody Customer customer) {</code></strong></li>
+<li><strong>Terminology</strong>: <code>@RequestBody</code> deserialization.</li>
+<li><strong>Purpose</strong>: Jackson takes the JSON object payload from the HTTP request body and converts it into a <code>Customer</code> Java object.</li>
+<li><strong><code>return customerRepo.save(customer);</code></strong></li>
+<li><strong>Terminology</strong>: Persistence invocation.</li>
+<li><strong>Purpose</strong>: Because the incoming <code>customer</code> has a <code>null</code> ID, Hibernate triggers an <code>INSERT INTO CRUD_Springworkshop ...</code> query. MySQL assigns the auto-increment ID, and the newly saved entity (with its generated <code>cid</code>) is returned as JSON.</li>
+<li><strong><code>}</code></strong>: Closes the <code>createCustomer</code> method.</li>
+<li><strong><code>// Create multiple customers at once</code> through <code>// }</code></strong>: Commented-out implementation demonstrating bulk insertion by accepting <code>List&lt;Customer&gt;</code> and invoking <code>saveAll(...)</code>.</li>
+</ul>
+<h4>Block 7: Update Customer Endpoint (<code>PUT /updateCust/{cid}</code>)</h4>
+<pre><code class="language-java">    // http://localhost:9991/updateCust/1 - UPDATE CUSTOMER
+    @PutMapping(&quot;/updateCust/{cid}&quot;)
+    Customer updateCustomer(@RequestBody Customer customer, @PathVariable Integer cid) {
+
+        Customer custFromDb = customerRepo.findById(cid).orElseThrow();
+
+        custFromDb.setCname(customer.getCname());
+        custFromDb.setProductName(customer.getProductName());
+        custFromDb.setPrice(customer.getPrice());
+        custFromDb.setQuantity(customer.getQuantity());
+
+        return customerRepo.save(custFromDb);
+    }
+</code></pre>
+<ul>
+<li><strong><code>// http://localhost:9991/updateCust/1 - UPDATE CUSTOMER</code></strong>: Comment documentation.</li>
+<li><strong><code>@PutMapping("/updateCust/{cid}")</code></strong></li>
+<li><strong>Terminology</strong>: HTTP PUT method route mapping.</li>
+<li><strong>Purpose</strong>: PUT is the standard HTTP method for updating existing resources.</li>
+<li><strong><code>Customer updateCustomer(@RequestBody Customer customer, @PathVariable Integer cid) {</code></strong></li>
+<li><strong>Terminology</strong>: Combined <code>@RequestBody</code> (new values) and <code>@PathVariable</code> (target record ID).</li>
+<li><strong>Purpose</strong>: Captures both the replacement data and the ID of the row to be modified.</li>
+<li><strong><code>Customer custFromDb = customerRepo.findById(cid).orElseThrow();</code></strong></li>
+<li><strong>Purpose</strong>: Fetches the existing row from MySQL. If the ID does not exist, an exception is thrown, preventing invalid updates.</li>
+<li><strong><code>custFromDb.setCname(customer.getCname());</code></strong>: Updates the customer name field.</li>
+<li><strong><code>custFromDb.setProductName(customer.getProductName());</code></strong>: Updates the product name field.</li>
+<li><strong><code>custFromDb.setPrice(customer.getPrice());</code></strong>: Updates the price field.</li>
+<li><strong><code>custFromDb.setQuantity(customer.getQuantity());</code></strong>: Updates the quantity field.</li>
+<li><strong><code>return customerRepo.save(custFromDb);</code></strong></li>
+<li><strong>Terminology</strong>: Update persistence.</li>
+<li><strong>Purpose</strong>: Because <code>custFromDb</code> already has an existing primary key <code>cid</code>, Hibernate performs an <code>UPDATE CRUD_Springworkshop SET ... WHERE cid = ?</code> statement and returns the updated customer.</li>
+<li><strong><code>}</code></strong>: Closes the <code>updateCustomer</code> method.</li>
+</ul>
+<h4>Block 8: Delete Customer Endpoint (<code>DELETE /delCust/{cid}</code>)</h4>
+<pre><code class="language-java">    // http://localhost:9991/delCust/1 - DELETE CUSTOMER
+    @DeleteMapping(&quot;/delCust/{cid}&quot;)
+    String deleteCustomer(@PathVariable Integer cid) {
+
+        customerRepo.deleteById(cid);
+
+        return &quot;Customer has been deleted successfully with id of &quot; + cid;
+    }
+}
+</code></pre>
+<ul>
+<li><strong><code>// http://localhost:9991/delCust/1 - DELETE CUSTOMER</code></strong>: Comment documentation.</li>
+<li><strong><code>@DeleteMapping("/delCust/{cid}")</code></strong></li>
+<li><strong>Terminology</strong>: HTTP DELETE route mapping.</li>
+<li><strong>Purpose</strong>: Maps incoming HTTP <code>DELETE</code> requests for <code>/delCust/{cid}</code> to this method.</li>
+<li><strong><code>String deleteCustomer(@PathVariable Integer cid) {</code></strong></li>
+<li><strong>Purpose</strong>: Receives the target record ID and returns a status confirmation message.</li>
+<li><strong><code>customerRepo.deleteById(cid);</code></strong></li>
+<li><strong>Terminology</strong>: Repository delete operation.</li>
+<li><strong>Purpose</strong>: Issues a <code>DELETE FROM CRUD_Springworkshop WHERE cid = ?</code> SQL statement to remove the record.</li>
+<li><strong><code>return "Customer has been deleted successfully with id of " + cid;</code></strong></li>
+<li><strong>Purpose</strong>: Returns a plain text confirmation string to the client.</li>
+<li><strong><code>}</code></strong>: Closes the <code>deleteCustomer</code> method.</li>
+<li><strong><code>}</code></strong>: Closes the <code>Welcome</code> class body.</li>
+</ul>
+<hr />
+<h3>5. <code>CrudApplicationTests.java</code></h3>
+<p><em>Role: Integration test suite verifying Spring application context bootstrapping.</em></p>
+<h4>Block 1: Package &amp; Imports</h4>
+<pre><code class="language-java">package com.ruthvik.CRUD;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+</code></pre>
+<ul>
+<li><strong><code>package com.ruthvik.CRUD;</code></strong>: Places tests in the matching test package structure under <code>src/test/java</code>.</li>
+<li><strong><code>import org.junit.jupiter.api.Test;</code></strong>: Imports JUnit 5's <code>@Test</code> annotation.</li>
+<li><strong><code>import org.springframework.boot.test.context.SpringBootTest;</code></strong>: Imports Spring Boot's context-loading test annotation.</li>
+</ul>
+<h4>Block 2: Test Class &amp; Context Load Test</h4>
+<pre><code class="language-java">@SpringBootTest
+class CrudApplicationTests {
+
+    @Test
+    void contextLoads() {
+    }
+
+}
+</code></pre>
+<ul>
+<li><strong><code>@SpringBootTest</code></strong></li>
+<li><strong>Terminology</strong>: Spring Boot test framework annotation.</li>
+<li><strong>Purpose</strong>: Bootstraps the full application context before executing test methods. Verifies that all beans, configurations, database connections, and annotations can initialize without crashing.</li>
+<li><strong><code>class CrudApplicationTests {</code></strong></li>
+<li><strong>Terminology</strong>: JUnit 5 test class.</li>
+<li><strong>Purpose</strong>: Container for test methods. JUnit 5 does not require <code>public</code> visibility.</li>
+<li><strong><code>@Test</code></strong></li>
+<li><strong>Terminology</strong>: Test method annotation.</li>
+<li><strong>Purpose</strong>: Designates <code>contextLoads()</code> as an executable test method recognized by the test runner.</li>
+<li><strong><code>void contextLoads() {</code></strong></li>
+<li><strong>Terminology</strong>: Smoke test method.</li>
+<li><strong>Purpose</strong>: Serves as a smoke test. Even though the body is empty, the test will fail if any configuration error, broken bean dependency, or database misconfiguration prevents the Spring container from starting.</li>
+<li><strong><code>}</code></strong>: Closes the <code>contextLoads</code> method.</li>
+<li><strong><code>}</code></strong>: Closes the <code>CrudApplicationTests</code> class body.</li>
+</ul>
+<hr />
+<h2>Full Source Code of All 5 Files</h2>
+<p>Below is the complete, unmodified code for all 5 files in the project.</p>
+<hr />
+<h3>Full Code: <code>CrudApplication.java</code></h3>
+<p><strong>File Path</strong>: <a href="file:///d:/VCUBE/SPRING_PROJECT_WORKSHOP/CRUD/src/main/java/com/ruthvik/CRUD/CrudApplication.java"><code>CRUD/src/main/java/com/ruthvik/CRUD/CrudApplication.java</code></a></p>
+<pre><code class="language-java">package com.ruthvik.CRUD;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class CrudApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(CrudApplication.class, args);
+    }
+
+}
+</code></pre>
+<hr />
+<h3>Full Code: <code>Customer.java</code></h3>
+<p><strong>File Path</strong>: <a href="file:///d:/VCUBE/SPRING_PROJECT_WORKSHOP/CRUD/src/main/java/com/ruthvik/CRUD/model/Customer.java"><code>CRUD/src/main/java/com/ruthvik/CRUD/model/Customer.java</code></a></p>
+<pre><code class="language-java">package com.ruthvik.CRUD.model;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Entity
+@Table(name = &quot;CRUD_Springworkshop&quot;)
+@Getter
+@Setter
+public class Customer {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Integer cid;
+    String cname;
+    String productName;
+    Double price;
+    Integer quantity;
+}
+</code></pre>
+<hr />
+<h3>Full Code: <code>CustomerRepo.java</code></h3>
+<p><strong>File Path</strong>: <a href="file:///d:/VCUBE/SPRING_PROJECT_WORKSHOP/CRUD/src/main/java/com/ruthvik/CRUD/repository/CustomerRepo.java"><code>CRUD/src/main/java/com/ruthvik/CRUD/repository/CustomerRepo.java</code></a></p>
+<pre><code class="language-java">package com.ruthvik.CRUD.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.ruthvik.CRUD.model.Customer;
+
+@Repository
+public interface CustomerRepo extends JpaRepository&lt;Customer, Integer&gt; {
+
+}
+</code></pre>
+<hr />
+<h3>Full Code: <code>Welcome.java</code></h3>
+<p><strong>File Path</strong>: <a href="file:///d:/VCUBE/SPRING_PROJECT_WORKSHOP/CRUD/src/main/java/com/ruthvik/CRUD/controller/Welcome.java"><code>CRUD/src/main/java/com/ruthvik/CRUD/controller/Welcome.java</code></a></p>
+<pre><code class="language-java">package com.ruthvik.CRUD.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ruthvik.CRUD.model.Customer;
+import com.ruthvik.CRUD.repository.CustomerRepo;
+
+@RestController
+@CrossOrigin(origins = &quot;http://localhost:5173&quot;)
+public class Welcome {
+
+    @Autowired
+    CustomerRepo customerRepo;
+
+    // http://localhost:9991/hello
+    // @GetMapping(&quot;/hello&quot;)
+    // String hello() {
+    // return &quot;hello Welcome to SPRING WORKSHOP&quot;;
+    // }
+
+    // http://localhost:9991/getCustList - GET ALL CUSTOMERS
+    @GetMapping(&quot;/getCustList&quot;)
+    List&lt;Customer&gt; getAllCustomerDetails() {
+        return customerRepo.findAll();
+    }
+
+    // http://localhost:9991/getCust/1 - GET CUSTOMER BY ID
+    @GetMapping(&quot;/getCust/{cid}&quot;)
+    Customer getCustomer(@PathVariable Integer cid) {
+        return customerRepo.findById(cid).orElseThrow();
+    }
+
+    // http://localhost:9991/createCust - CREATE CUSTOMER
+    @PostMapping(&quot;/createCust&quot;)
+    public Customer createCustomer(@RequestBody Customer customer) {
+        return customerRepo.save(customer);
+    }
+
+    // Create multiple customers at once
+//  @PostMapping(&quot;/createCust&quot;)
+//  public List&lt;Customer&gt; createCustomers(@RequestBody List&lt;Customer&gt; customers) {
+//      return customerRepo.saveAll(customers);
+//  }
+
+    // http://localhost:9991/updateCust/1 - UPDATE CUSTOMER
+    @PutMapping(&quot;/updateCust/{cid}&quot;)
+    Customer updateCustomer(@RequestBody Customer customer, @PathVariable Integer cid) {
+
+        Customer custFromDb = customerRepo.findById(cid).orElseThrow();
+
+        custFromDb.setCname(customer.getCname());
+        custFromDb.setProductName(customer.getProductName());
+        custFromDb.setPrice(customer.getPrice());
+        custFromDb.setQuantity(customer.getQuantity());
+
+        return customerRepo.save(custFromDb);
+    }
+
+    // http://localhost:9991/delCust/1 - DELETE CUSTOMER
+    @DeleteMapping(&quot;/delCust/{cid}&quot;)
+    String deleteCustomer(@PathVariable Integer cid) {
+
+        customerRepo.deleteById(cid);
+
+        return &quot;Customer has been deleted successfully with id of &quot; + cid;
+    }
+}
+</code></pre>
+<hr />
+<h3>Full Code: <code>CrudApplicationTests.java</code></h3>
+<p><strong>File Path</strong>: <a href="file:///d:/VCUBE/SPRING_PROJECT_WORKSHOP/CRUD/src/test/java/com/ruthvik/CRUD/CrudApplicationTests.java"><code>CRUD/src/test/java/com/ruthvik/CRUD/CrudApplicationTests.java</code></a></p>
+<pre><code class="language-java">package com.ruthvik.CRUD;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class CrudApplicationTests {
+
+    @Test
+    void contextLoads() {
+    }
+
+}
+</code></pre>
+</body>
+</html>

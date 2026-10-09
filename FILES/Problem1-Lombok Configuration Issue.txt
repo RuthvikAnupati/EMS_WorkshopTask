@@ -1,0 +1,47 @@
+## Interview Question: What challenges did you face in this project?
+
+### Answer — Copyable Format
+
+> One of the challenges I faced was while developing the CRUD application using Spring Boot, JPA, and MySQL. My database connection and API were working correctly, and the `findAll()` query was also executing successfully. However, when I called the GET API, instead of getting the customer details, I was getting an empty JSON object like `{}`.
+>
+> I first checked my database, repository, controller, and SQL query. I found that the data was present in the MySQL table and Hibernate was successfully fetching the data. Then I realized that I was using Lombok's `@Getter` and `@Setter`, but Lombok was not properly configured with my Eclipse IDE. Because of that, the getter methods were not being generated properly, so the customer fields were not being serialized correctly into JSON.
+>
+> To troubleshoot the issue, I temporarily created manual getter and setter methods. When the API worked correctly with them, I identified Lombok as the problem. I then installed and configured Lombok in Eclipse, updated the Maven project, cleaned the project, and restarted Eclipse. After that, Lombok-generated getters worked and the API returned the customer details correctly.
+>
+> This experience taught me how to debug an application step by step and check each layer, including the controller, repository, database, entity, and JSON serialization.
+
+---
+
+## If interviewer asks: "At what stage did you face this problem?"
+
+> I faced this problem during the **API testing and integration stage**, after connecting Spring Boot with MySQL and creating the GET API.
+
+---
+
+## If interviewer asks: "How did you identify the problem?"
+
+> I checked the problem layer by layer. First, I checked the database and confirmed that the record was present. Then I checked the Hibernate console and confirmed that the `SELECT` query was executing successfully. Since the API was returning `{}`, I tested the entity with manual getters and setters. The API worked with manual getters, so I identified that Lombok was not being processed correctly by Eclipse.
+
+---
+
+## If interviewer asks: "What was the actual error?"
+
+> The actual issue was not with the database or the SQL query. Lombok was not properly integrated with my Eclipse IDE, so the `@Getter` and `@Setter` annotations were not generating the getter methods properly. Because of this, Jackson was unable to serialize the entity fields into the JSON response correctly.
+
+---
+
+## If interviewer asks: "How did you solve it?"
+
+> I installed Lombok into my Eclipse IDE, then updated the Maven project and cleaned the project. After restarting Eclipse, I verified that the Lombok-generated getter methods were recognized. I then tested the API again and got the correct customer details in JSON format.
+
+---
+
+## If interviewer asks: "What did you learn from this?"
+
+> I learned that when an API does not return the expected output, I should not immediately assume that the database is the problem. I should debug each layer step by step, starting from the controller and repository, then checking the database, entity mapping, and finally JSON serialization. I also learned how Lombok works with Eclipse and Maven.
+
+---
+
+## Short answer — if they want a quick response
+
+> One challenge I faced was getting `{}` instead of customer details from my GET API. I checked the database and found that the data was present, and Hibernate was also executing the `SELECT` query correctly. I then tested the entity using manual getters and setters and found that Lombok was not being recognized properly by Eclipse. I configured Lombok correctly, updated Maven, cleaned the project, and restarted Eclipse. After that, the API returned the correct JSON response. This improved my debugging and troubleshooting skills.

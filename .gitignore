@@ -1,0 +1,25 @@
+# Eclipse workspace
+.metadata/
+
+# Spring Boot / Maven
+CUST_CRUD/target/
+CUST_CRUD/.classpath
+CUST_CRUD/.project
+CUST_CRUD/.settings/
+
+# React / Vite
+EMP_UI/node_modules/
+EMP_UI/dist/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+
+# Operating system
+.DS_Store
+Thumbs.db
